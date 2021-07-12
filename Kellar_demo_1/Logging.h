@@ -4,7 +4,7 @@
 // =================================================================================================
 
 #ifndef LOG_LEVEL
-#define LOG_LEVEL LOG_LEVEL_ERROR
+#define LOG_LEVEL LOG_LEVEL_VERBOSE
 #endif
 
 #ifndef LOCAL_LOG_LEVEL
