@@ -12,7 +12,7 @@
 // Include the header for the ModbusClient RTU style
 #include "ModbusClientRTU.h"
 
-#define LOG_LEVEL LOG_LEVEL_VERBOSE
+//#define LOG_LEVEL LOG_LEVEL_VERBOSE
 // For demonstration, use the LOG statements for output
 #include "Logging.h"
 
