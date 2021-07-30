@@ -264,7 +264,18 @@ ModbusMessage RTUutils::receive(HardwareSerial& serial, uint32_t timeout, uint32
       {
         // Yes. Allocate response object
         for (uint16_t i = 0; i < bufferPtr; ++i) {
+          /*
+            Modified By EBRAHIM RUPAWALA, 31/07/21 for Kellar Sensor
+          */
+
+          if (i=0 || i = (bufferPtr - 1))
+          {
+            Serial.print("Skipping the stray byte as following: ");
+            Serial.println(buffer[i]);
+          }
+          else{
           rv.push_back(buffer[i]);
+        }
         }
         state = FINISHED;
       } else {
@@ -288,3 +299,6 @@ ModbusMessage RTUutils::receive(HardwareSerial& serial, uint32_t timeout, uint32
 
   return rv;
 }
+
+
+
