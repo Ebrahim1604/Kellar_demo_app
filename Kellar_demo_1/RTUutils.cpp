@@ -271,7 +271,7 @@ ModbusMessage RTUutils::receive(HardwareSerial& serial, uint32_t timeout, uint32
           if (i=0 || i = (bufferPtr - 1))
           {
             Serial.print("Skipping the stray byte as following: ");
-            Serial.println(buffer[i]);
+            Serial.println(buffer[i],HEX);
           }
           else{
           rv.push_back(buffer[i]);
