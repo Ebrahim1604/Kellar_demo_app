@@ -268,7 +268,7 @@ ModbusMessage RTUutils::receive(HardwareSerial& serial, uint32_t timeout, uint32
             Modified By EBRAHIM RUPAWALA, 31/07/21 for Kellar Sensor
           */
 
-          if (i=0 || i = (bufferPtr - 1))
+          if (i==0 || i ==(bufferPtr - 1))
           {
             Serial.print("Skipping the stray byte as following: ");
             Serial.println(buffer[i],HEX);
