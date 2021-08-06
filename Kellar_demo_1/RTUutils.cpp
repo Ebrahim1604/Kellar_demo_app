@@ -264,17 +264,7 @@ ModbusMessage RTUutils::receive(HardwareSerial& serial, uint32_t timeout, uint32
       {
         // Yes. Allocate response object
         for (uint16_t i = 0; i < bufferPtr; ++i) {
-          /*
-            Modified By EBRAHIM RUPAWALA, 31/07/21 for Kellar 33x pressure & temp Sensor
-          */
-
-          if (i==0 || i ==(bufferPtr - 1))
-          {
-            //DO nothing..
-          }
-          else{
           rv.push_back(buffer[i]);
-        }
         }
         state = FINISHED;
       } else {
@@ -298,6 +288,3 @@ ModbusMessage RTUutils::receive(HardwareSerial& serial, uint32_t timeout, uint32
 
   return rv;
 }
-
-
-
