@@ -57,24 +57,65 @@ void setup() {
 
 uint32_t Token = 1111;
 
-for(int id = 1; id<=no_of_sensors; id++)
-  {   
-      Serial.printf("Parameters for Sensor %d:\n", id);
-      
-      for(int addr = 0; addr<5; addr++)
-      {
-        addr_global = addr;
-        Error err = MB.addRequest(Token++, id, READ_HOLD_REGISTER, addr_list[addr], 2);
-          if (err!=SUCCESS) 
-          {
-          ModbusError e(err);
-          LOG_E("Error creating request: %02X - %s\n", (int)e, (const char *)e);
-          }
-       }
+int id = 1;
 
-       Serial.println("");
-       Serial.println("");
-    }
+addr_global = 0;
+Error err0 = MB.addRequest(Token++, id, READ_HOLD_REGISTER, addr_list[addr_global], 2);
+          if (err0!=SUCCESS) 
+          {
+            ModbusError e(err0);
+            Serial.print("Error detected at Value = !");
+            Serial.println(addr_global);
+            Serial.println("");
+            LOG_E("Error creating request: %02X - %s\n", (int)e, (const char *)e);
+          }
+
+
+addr_global = 1;
+Error err1 = MB.addRequest(Token++, id, READ_HOLD_REGISTER, addr_list[addr_global], 2);
+          if (err1!=SUCCESS) 
+          {
+            ModbusError e(err1);
+            Serial.print("Error detected at Value = !");
+            Serial.println(addr_global);
+            Serial.println("");
+            LOG_E("Error creating request: %02X - %s\n", (int)e, (const char *)e);
+          }
+
+addr_global = 2;
+Error err2 = MB.addRequest(Token++, id, READ_HOLD_REGISTER, addr_list[addr_global], 2);
+          if (err2!=SUCCESS) 
+          {
+            ModbusError e(err2);
+            Serial.print("Error detected at Value = !");
+            Serial.println(addr_global);
+            Serial.println("");
+            LOG_E("Error creating request: %02X - %s\n", (int)e, (const char *)e);
+          }
+
+addr_global = 3;
+Error err3 = MB.addRequest(Token++, id, READ_HOLD_REGISTER, addr_list[addr_global], 2);
+          if (err3!=SUCCESS) 
+          {
+            ModbusError e(err3);
+            Serial.print("Error detected at Value = !");
+            Serial.println(addr_global);
+            Serial.println("");
+            LOG_E("Error creating request: %02X - %s\n", (int)e, (const char *)e);
+          }
+
+addr_global = 4;
+Error err4 = MB.addRequest(Token++, id, READ_HOLD_REGISTER, addr_list[addr_global], 2);
+          if (err4!=SUCCESS) 
+          {
+            ModbusError e(err4);
+            Serial.print("Error detected at Value = !");
+            Serial.println(addr_global);
+            Serial.println("");
+            LOG_E("Error creating request: %02X - %s\n", (int)e, (const char *)e);
+          }
+
+
 
 }
 
@@ -88,13 +129,18 @@ void loop()
       
       for(int addr = 0; addr<5; addr++)
       {
+        addr_global = addr;
         Error err = MB.addRequest(Token++, id, READ_HOLD_REGISTER, addr_list[addr], 2);
           if (err!=SUCCESS) 
           {
           ModbusError e(err);
+          Serial.print("Error detected!");
           LOG_E("Error creating request: %02X - %s\n", (int)e, (const char *)e);
           }
        }
+
+       Serial.println("");
+       Serial.println("");
     }
     */
 }
@@ -121,6 +167,7 @@ void handleData(ModbusMessage response, uint32_t token)
     {
       Serial.print("P1 = ");
       double val_ = cal_double(val[3],val[4],val[5],val[6]);
+      Serial.print(val_);
       Serial.println("bar"); 
       Serial.println("");
       }
@@ -128,6 +175,7 @@ void handleData(ModbusMessage response, uint32_t token)
     {
       Serial.print("P2 = ");
       double val_ = cal_double(val[3],val[4],val[5],val[6]);
+      Serial.print(val_);
       Serial.println("bar");
       Serial.println(""); 
       }
@@ -135,6 +183,7 @@ void handleData(ModbusMessage response, uint32_t token)
     {
       Serial.print("T = ");
       double val_ = cal_double(val[3],val[4],val[5],val[6]);
+      Serial.print(val_);
       Serial.println("degree C");
       Serial.println(""); 
       }
@@ -142,6 +191,7 @@ void handleData(ModbusMessage response, uint32_t token)
     {
       Serial.print("Tob1 = ");
       double val_ = cal_double(val[3],val[4],val[5],val[6]);
+      Serial.print(val_);
       Serial.println("degree C");
       Serial.println("");
       }
@@ -149,6 +199,7 @@ void handleData(ModbusMessage response, uint32_t token)
     {
       Serial.print("Tob2 = ");
       double val_ = cal_double(val[3],val[4],val[5],val[6]);
+      Serial.print(val_);
       Serial.println("degree C");
       Serial.println("");
       }
