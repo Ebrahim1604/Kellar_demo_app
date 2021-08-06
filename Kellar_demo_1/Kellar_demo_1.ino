@@ -57,10 +57,10 @@ void setup() {
 
 uint32_t Token = 1111;
 
-int id = 1;
+//int id = 1;
 
 addr_global = 0;
-Error err0 = MB.addRequest(Token++, id, READ_HOLD_REGISTER, addr_list[addr_global], 2);
+Error err0 = MB.addRequest(Token++, 1, READ_HOLD_REGISTER, 0x0002, 2);
           if (err0!=SUCCESS) 
           {
             ModbusError e(err0);
@@ -72,7 +72,7 @@ Error err0 = MB.addRequest(Token++, id, READ_HOLD_REGISTER, addr_list[addr_globa
 
 
 addr_global = 1;
-Error err1 = MB.addRequest(Token++, id, READ_HOLD_REGISTER, addr_list[addr_global], 2);
+Error err1 = MB.addRequest(Token++, 1, READ_HOLD_REGISTER, 0x0004, 2);
           if (err1!=SUCCESS) 
           {
             ModbusError e(err1);
@@ -83,7 +83,7 @@ Error err1 = MB.addRequest(Token++, id, READ_HOLD_REGISTER, addr_list[addr_globa
           }
 
 addr_global = 2;
-Error err2 = MB.addRequest(Token++, id, READ_HOLD_REGISTER, addr_list[addr_global], 2);
+Error err2 = MB.addRequest(Token++, 1, READ_HOLD_REGISTER, 0x0006, 2);
           if (err2!=SUCCESS) 
           {
             ModbusError e(err2);
@@ -94,7 +94,7 @@ Error err2 = MB.addRequest(Token++, id, READ_HOLD_REGISTER, addr_list[addr_globa
           }
 
 addr_global = 3;
-Error err3 = MB.addRequest(Token++, id, READ_HOLD_REGISTER, addr_list[addr_global], 2);
+Error err3 = MB.addRequest(Token++, 1, READ_HOLD_REGISTER, 0x0008, 2);
           if (err3!=SUCCESS) 
           {
             ModbusError e(err3);
@@ -105,7 +105,7 @@ Error err3 = MB.addRequest(Token++, id, READ_HOLD_REGISTER, addr_list[addr_globa
           }
 
 addr_global = 4;
-Error err4 = MB.addRequest(Token++, id, READ_HOLD_REGISTER, addr_list[addr_global], 2);
+Error err4 = MB.addRequest(Token++, 1, READ_HOLD_REGISTER, 0x000A, 2);
           if (err4!=SUCCESS) 
           {
             ModbusError e(err4);
@@ -115,7 +115,16 @@ Error err4 = MB.addRequest(Token++, id, READ_HOLD_REGISTER, addr_list[addr_globa
             LOG_E("Error creating request: %02X - %s\n", (int)e, (const char *)e);
           }
 
-
+addr_global = 5;
+Error err5 = MB.addRequest(Token++, 1, READ_HOLD_REGISTER, 0x0002, 10);
+          if (err5!=SUCCESS) 
+          {
+            ModbusError e(err5);
+            Serial.print("Error detected at Value = !");
+            Serial.println(addr_global);
+            Serial.println("");
+            LOG_E("Error creating request: %02X - %s\n", (int)e, (const char *)e);
+          }
 
 }
 
@@ -203,6 +212,16 @@ void handleData(ModbusMessage response, uint32_t token)
       Serial.println("degree C");
       Serial.println("");
       }
+    else if(addr_global == 5)
+    { 
+      Serial.println("^^^^All in one values^^^^");
+      Serial.println("");
+      }
+     else
+     {
+      Serial.println("Error: addr_global value out of bound");
+      }
+  
   }
 
   else {Serial.println("Ran out of token value");}
@@ -220,7 +239,7 @@ double cal_double(uint8_t a,uint8_t b,uint8_t c,uint8_t d)
   union
     {
         float doubleVal;
-        uint16_t bytes[4];
+        uint8_t bytes[4];
     }doubleConverter;
     
     doubleConverter.bytes[0]= d; 
