@@ -106,7 +106,7 @@ void handleData(ModbusMessage response, uint32_t token)
     for(int k=0; k<val_size; k++)
     {
       
-      Serial.print(val[k]);
+      Serial.print(val[k], HEX);
       Serial.print(" ");
     }
     Serial.println("");
@@ -119,18 +119,3 @@ void handleError(Error error, uint32_t token)
   ModbusError me(error);
   LOG_E("Error response: %02X - %s\n", (int)me, (const char *)me);
 }
-
-/*
-  union
-    {
-        float doubleVal;
-        uint8_t bytes[4];
-    }doubleConverter;
-       
-    doubleConverter.bytes[0]= 0x7B; 
-    doubleConverter.bytes[1]= 0xF0;
-    doubleConverter.bytes[2]= 0x75;
-    doubleConverter.bytes[3]= 0x3F;
-  
-    double fo = (double)doubleConverter.doubleVal;
- */
