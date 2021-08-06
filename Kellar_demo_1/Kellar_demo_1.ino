@@ -26,6 +26,8 @@ const byte rts = 15;
 
 uint16_t addr_list[] = {0x0002,0x0004,0x0006,0x0008,0x000A}; //p1,p2,T,tob1,tob2
 
+int addr_global;
+
 // Create a ModbusRTU client instance
 ModbusClientRTU MB(Serial2, rts);
 
@@ -61,6 +63,7 @@ for(int id = 1; id<=no_of_sensors; id++)
       
       for(int addr = 0; addr<5; addr++)
       {
+        addr_global = addr;
         Error err = MB.addRequest(Token++, id, READ_HOLD_REGISTER, addr_list[addr], 2);
           if (err!=SUCCESS) 
           {
@@ -68,6 +71,9 @@ for(int id = 1; id<=no_of_sensors; id++)
           LOG_E("Error creating request: %02X - %s\n", (int)e, (const char *)e);
           }
        }
+
+       Serial.println("");
+       Serial.println("");
     }
 
 }
@@ -110,7 +116,45 @@ void handleData(ModbusMessage response, uint32_t token)
       Serial.print(" ");
     }
     Serial.println("");
+    
+    if(addr_global == 0)
+    {
+      Serial.print("P1 = ");
+      double val_ = cal_double(val[3],val[4],val[5],val[6]);
+      Serial.println("bar"); 
+      Serial.println("");
+      }
+    else if(addr_global == 1)
+    {
+      Serial.print("P2 = ");
+      double val_ = cal_double(val[3],val[4],val[5],val[6]);
+      Serial.println("bar");
+      Serial.println(""); 
+      }
+    else if(addr_global == 2)
+    {
+      Serial.print("T = ");
+      double val_ = cal_double(val[3],val[4],val[5],val[6]);
+      Serial.println("degree C");
+      Serial.println(""); 
+      }
+    else if(addr_global == 3)
+    {
+      Serial.print("Tob1 = ");
+      double val_ = cal_double(val[3],val[4],val[5],val[6]);
+      Serial.println("degree C");
+      Serial.println("");
+      }
+    else if(addr_global == 4)
+    {
+      Serial.print("Tob2 = ");
+      double val_ = cal_double(val[3],val[4],val[5],val[6]);
+      Serial.println("degree C");
+      Serial.println("");
+      }
   }
+
+  else {Serial.println("Ran out of token value");}
 }
 
 void handleError(Error error, uint32_t token) 
@@ -119,3 +163,22 @@ void handleError(Error error, uint32_t token)
   ModbusError me(error);
   LOG_E("Error response: %02X - %s\n", (int)me, (const char *)me);
 }
+
+double cal_double(uint8_t a,uint8_t b,uint8_t c,uint8_t d)
+{
+  union
+    {
+        float doubleVal;
+        uint16_t bytes[4];
+    }doubleConverter;
+    
+    doubleConverter.bytes[0]= d; 
+    doubleConverter.bytes[1]= c;
+    doubleConverter.bytes[2]= b;
+    doubleConverter.bytes[3]= a;
+    
+  
+    double fo = (double)doubleConverter.doubleVal;
+  
+    return fo;
+  }
