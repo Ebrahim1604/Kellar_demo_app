@@ -126,6 +126,39 @@ Error err5 = MB.addRequest(Token++, 1, READ_HOLD_REGISTER, 0x0002, 10);
             LOG_E("Error creating request: %02X - %s\n", (int)e, (const char *)e);
           }
 
+addr_global = 6;
+Error err6 = MB.addRequest(Token++, 1, READ_HOLD_REGISTER, 0x0200, 1);
+          if (err6!=SUCCESS) 
+          {
+            ModbusError e(err6);
+            Serial.print("Error detected at Value = !");
+            Serial.println(addr_global);
+            Serial.println("");
+            LOG_E("Error creating request: %02X - %s\n", (int)e, (const char *)e);
+          }
+
+addr_global = 7;
+Error err7 = MB.addRequest(Token++, 1, READ_HOLD_REGISTER, 0x0202, 1);
+          if (err7!=SUCCESS) 
+          {
+            ModbusError e(err7);
+            Serial.print("Error detected at Value = !");
+            Serial.println(addr_global);
+            Serial.println("");
+            LOG_E("Error creating request: %02X - %s\n", (int)e, (const char *)e);
+          }
+
+addr_global = 8;
+Error err8 = MB.addRequest(Token++, 1, READ_HOLD_REGISTER, 0x0203, 1);
+          if (err8!=SUCCESS) 
+          {
+            ModbusError e(err8);
+            Serial.print("Error detected at Value = !");
+            Serial.println(addr_global);
+            Serial.println("");
+            LOG_E("Error creating request: %02X - %s\n", (int)e, (const char *)e);
+          }
+
 }
 
 // loop() - nothing done here today!
@@ -156,6 +189,7 @@ void loop()
 
 void handleData(ModbusMessage response, uint32_t token) 
 {
+  Serial.println("_____________________________________________________________________________________________________________");
   // Only print out result of the "real" example - not the request preparing the field
   if (token > 1111) {
 
@@ -163,7 +197,9 @@ void handleData(ModbusMessage response, uint32_t token)
     int val_size = response.size();
     //static uint8_t val[val_size];
     
-    Serial.print("Data received = ");
+    Serial.print("Data received for ");
+    Serial.print(addr_global);
+    Serial.print("= ");
     for(int k=0; k<val_size; k++)
     {
       
@@ -171,7 +207,8 @@ void handleData(ModbusMessage response, uint32_t token)
       Serial.print(" ");
     }
     Serial.println("");
-    
+
+    /*
     if(addr_global == 0)
     {
       Serial.print("P1 = ");
@@ -221,10 +258,12 @@ void handleData(ModbusMessage response, uint32_t token)
      {
       Serial.println("Error: addr_global value out of bound");
       }
-  
+  */
   }
 
   else {Serial.println("Ran out of token value");}
+
+  Serial.println("_____________________________________________________________________________________________________________");
 }
 
 void handleError(Error error, uint32_t token) 
