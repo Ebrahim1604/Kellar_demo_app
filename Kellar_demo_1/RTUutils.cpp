@@ -188,13 +188,114 @@ void RTUutils::send(HardwareSerial& serial, uint32_t& lastMicros, uint32_t inter
   send(serial, lastMicros, interval, rts, raw.data(), raw.size());
 }
 
+uint8_t* clean_data(uint8_t *buffer1, register uint16_t bufferPtr, int* len)
+{
+  int trigger1 = 0;
+  int trigger2 = 0;
+  int count1 = 0;
+  int count2 = 0;
+  uint8_t temp1;
+  uint8_t temp2;
+
+  static uint8_t buffer2[9];
+  static uint8_t buffer3[7];
+  
+  for (int i=0; i<bufferPtr; i++)
+    {       
+        if (buffer1[i]==0x01 && trigger1==0)
+        {
+            temp1 = buffer1[i];
+            trigger1 = 1;
+        }
+        
+        else if (trigger1 == 1 && count2==0)
+        {
+            if (buffer1[i-1]==0x01 && buffer1[i]==0x03)
+            {
+                temp2 = buffer1[i];
+            }
+            
+            else if(buffer1[i-2]==0x01 && buffer1[i-1]==0x03)
+            {
+                if(buffer1[i] == 0x04)
+                {
+                    buffer2[0] = temp1;
+                    buffer2[1] = temp2;
+                    buffer2[2] = buffer1[i];
+                    count2 = 4;
+                    trigger2 = 1;
+                    *len = 1;
+                }
+                
+                else if(buffer1[i] == 0x02)
+                {
+                    buffer3[0] = temp1;
+                    buffer3[1] = temp2;
+                    buffer3[2] = buffer1[i];
+                    count2 = 2;
+                    trigger2 = 1;
+                    *len = 0;
+                }
+                else
+                {
+                    trigger1 = 0;
+                }
+                
+                
+            }
+            else
+            {
+                trigger1 = 0;
+            }
+            
+            
+        }
+        
+        else if (trigger2 == 1)
+        {   
+            
+            if (count2 == 4)
+            {   
+                if(count1 <= count2+2)
+                {
+                    buffer2[count1 + 3] = buffer1[i];
+                    count1 = count1 + 1;
+                }
+            }
+                
+            if (count2 == 2)
+            {   
+                if(count1 <= count2+2)
+                {
+                    buffer3[count1 + 3] = buffer1[i];
+                    count1 = count1 + 1;
+                }
+                
+            }
+        }
+  }
+
+  if (count2 == 4)
+  {
+    return buffer2;
+    }
+
+   else
+   {
+    return buffer3;
+    }
+
+}
+
 // receive: get (any) message from Serial, taking care of timeout and interval
 ModbusMessage RTUutils::receive(HardwareSerial& serial, uint32_t timeout, uint32_t& lastMicros, uint32_t interval) {
   // Allocate initial receive buffer size: 1 block of BUFBLOCKSIZE bytes
   const uint16_t BUFBLOCKSIZE(512);
   uint8_t *buffer = new uint8_t[BUFBLOCKSIZE];
+  uint8_t *buffer_;
+  
   ModbusMessage rv;
-
+  
   // Index into buffer
   register uint16_t bufferPtr = 0;
   // Byte read
@@ -259,17 +360,28 @@ ModbusMessage RTUutils::receive(HardwareSerial& serial, uint32_t timeout, uint32
       break;
     // DATA_READ: successfully gathered some data. Prepare return object.
     case DATA_READ:
+
+       int len;
+       buffer_ = clean_data(buffer, bufferPtr, &len);
+      
       // Did we get a sensible buffer length?
-      if (bufferPtr >= 4)
+      if (len == 1)
       {
         // Yes. Allocate response object
-        for (uint16_t i = 0; i < bufferPtr; ++i) {
-          rv.push_back(buffer[i]);
+        for (uint16_t i = 0; i < 9; ++i) 
+        {
+          rv.push_back(buffer_[i]);
         }
         state = FINISHED;
-      } else {
-        // No, packet was too short for anything usable. Return error
-        rv.push_back(PACKET_LENGTH_ERROR);
+      } 
+      
+      else 
+      {
+        // Yes. Allocate response object
+        for (uint16_t i = 0; i < 7; ++i) 
+        {
+          rv.push_back(buffer_[i]);
+        }
         state = FINISHED;
       }
       break;
@@ -288,3 +400,4 @@ ModbusMessage RTUutils::receive(HardwareSerial& serial, uint32_t timeout, uint32
 
   return rv;
 }
+
