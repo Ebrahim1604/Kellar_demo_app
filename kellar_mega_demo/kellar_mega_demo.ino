@@ -3,7 +3,7 @@
 #define MasterModbusAdd  0
 #define SlaveModbusAdd  1
 #define RS485Serial 2
-Modbus ControllinoModbusMaster(MasterModbusAdd, RS485Serial, 0);
+Modbus ControllinoModbusMaster(MasterModbusAdd, RS485Serial, 3);
 modbus_t ModbusQuery[2];
 
 unsigned long WaitingTime;
