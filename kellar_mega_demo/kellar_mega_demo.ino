@@ -25,7 +25,32 @@ void setup() {
   
   float P1 = get_sensor_val(0x0002); //P1
   Serial.print("P1 = ");
-  Serial.println(P1);
+  Serial.print(P1);
+  Serial.println(" bar");
+  last_error();
+
+  float P2 = get_sensor_val(0x0004); //P2
+  Serial.print("P2 = ");
+  Serial.print(P2);
+  Serial.println(" bar");
+  last_error();
+
+  float T = get_sensor_val(0x0006); //T
+  Serial.print("T = ");
+  Serial.print(T);
+  Serial.println(" degree C");
+  last_error();
+
+  float tob1 = get_sensor_val(0x0008); //tob1
+  Serial.print("tob1 = ");
+  Serial.print(tob1);
+  Serial.println(" degree C");
+  last_error();
+
+  float tob2 = get_sensor_val(0x000A); //P1
+  Serial.print("tob2 = ");
+  Serial.print(tob2);
+  Serial.println(" degree C");
   last_error();
 }
 
@@ -41,8 +66,8 @@ float floatconvert(uint16_t a,uint16_t b)
         uint16_t bytes[2];
     }floatConverter;
     
-    floatConverter.bytes[0]= b; 
-    floatConverter.bytes[1]= a;
+    floatConverter.bytes[0]= a; 
+    floatConverter.bytes[1]= b;
     
     double fo = floatConverter.floatVal;
     return fo;
@@ -127,37 +152,3 @@ again1:
    goto again1;
   }
  }
-
-void set_reg(uint16_t addr, int reg_val)
-{
-  uint16_t req_reg_val[1];
-  
-  ModbusQuery[1].u8id = SlaveModbusAdd;
-  ModbusQuery[1].u8fct = 6;
-  ModbusQuery[1].u16RegAdd = addr - 1;
-  ModbusQuery[1].u16CoilsNo = 1;
-  ModbusQuery[1].au16reg = req_reg_val;
-  req_reg_val[0] = reg_val;
-
-  ControllinoModbusMaster.begin( 9600 );
-  ControllinoModbusMaster.setTimeOut( 5000 );
-
-  WaitingTime = millis() + 1000;
-
-  while (millis() > WaitingTime);
-
-  ControllinoModbusMaster.query( ModbusQuery[1] );
-
-again2:
-  ControllinoModbusMaster.poll();
-  if (ControllinoModbusMaster.getState() == COM_IDLE)
-  {
-    Serial2.end();
-    //Serial.println("Speed changed!");
-    return;
-  }
-  else
-  {
-   goto again2;
-  } 
-}
