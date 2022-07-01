@@ -836,22 +836,17 @@ int8_t Modbus::getRxBuffer()
     }
 
     u8BufferSize = 0;
-    //ebrahim
-        Serial.print("Received Response from Kellar: ");
+    
     if(u8serno<4)
     {
         while ( port->available() )
         {
             au8Buffer[ u8BufferSize ] = port->read();
-            //ebrahim
-            Serial.print(au8Buffer[ u8BufferSize ],HEX);
-            Serial.print(" ");
             u8BufferSize ++;
 
             if (u8BufferSize >= MAX_BUFFER) bBuffOverflow = true;
         }
-        //ebrahim
-        Serial.println("");
+        
     }
     else
     {
@@ -1102,6 +1097,14 @@ uint8_t Modbus::validateRequest()
  */
 uint8_t Modbus::validateAnswer()
 {
+    //ebrahim
+     Serial.print("Received Response: ");
+     for (int i=0; i<u8BufferSize; i++)
+     {
+      Serial.print(au8Buffer[i]);
+      Serial.print(" ");
+      }
+      Serial.println("");
     // check message crc vs calculated crc
     uint16_t u16MsgCRC =
         ((au8Buffer[u8BufferSize - 2] << 8)
