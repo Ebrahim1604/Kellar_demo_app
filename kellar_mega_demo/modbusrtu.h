@@ -845,7 +845,7 @@ int8_t Modbus::getRxBuffer()
         {
             au8Buffer[ u8BufferSize ] = port->read();
             u8BufferSize ++;
-            Serial.print(au8Buffer[u8BufferSize]);
+            Serial.print(au8Buffer[u8BufferSize],HEX);
             Serial.print(" ");
             if (u8BufferSize >= MAX_BUFFER) bBuffOverflow = true;
         }
