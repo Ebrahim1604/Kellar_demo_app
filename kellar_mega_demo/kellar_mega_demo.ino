@@ -23,42 +23,43 @@ void setup() {
   Serial.println("");
   Serial.println("_____________Sensor values are displayed below:___________");
   
-  float P1 = get_sensor_val(0x0002); //P1
+  double P1 = get_sensor_val(0x0002); //P1
   Serial.print("P1 = ");
   Serial.print(P1);
   Serial.println(" bar");
   last_error();
-
-  float P2 = get_sensor_val(0x0004); //P2
+  Serial.println("-----------------------");
+  double P2 = get_sensor_val(0x0004); //P2
   Serial.print("P2 = ");
   Serial.print(P2);
   Serial.println(" bar");
   last_error();
-
-  float T = get_sensor_val(0x0006); //T
+  Serial.println("-----------------------");
+  double T = get_sensor_val(0x0006); //T
   Serial.print("T = ");
   Serial.print(T);
   Serial.println(" degree C");
   last_error();
-
-  float tob1 = get_sensor_val(0x0008); //tob1
+  Serial.println("-----------------------");
+  double tob1 = get_sensor_val(0x0008); //tob1
   Serial.print("tob1 = ");
   Serial.print(tob1);
   Serial.println(" degree C");
   last_error();
-
-  float tob2 = get_sensor_val(0x000A); //P1
+  Serial.println("-----------------------");
+  double tob2 = get_sensor_val(0x000A); //P1
   Serial.print("tob2 = ");
   Serial.print(tob2);
   Serial.println(" degree C");
   last_error();
+  
 }
 
 void loop() {
   // put your main code here, to run repeatedly:
   }
 
-float floatconvert(uint16_t a,uint16_t b)
+double floatconvert(uint16_t a,uint16_t b)
 {
   union
     {
@@ -120,7 +121,7 @@ again1:
   }
 }
 
-float get_sensor_val(int addr)
+double get_sensor_val(int addr)
 {
   uint16_t curr_reg_val[2];
   
@@ -144,7 +145,11 @@ again1:
   if (ControllinoModbusMaster.getState() == COM_IDLE)
   {
     Serial2.end();
-    float P =  floatconvert(curr_reg_val[0],curr_reg_val[1]);
+    Serial.print("H-word: ");
+    Serial.print(curr_reg_val[0]);
+    Serial.print(" L-word: ");
+    Serial.println(curr_reg_val[1]);
+    double P =  floatconvert(curr_reg_val[0],curr_reg_val[1]);
     return P;
   }
   else
