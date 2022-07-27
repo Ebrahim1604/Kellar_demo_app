@@ -1,4 +1,4 @@
-### kellerbus, a library for arduino
+### modified kellerbus library for Esp32
 
 ## requirements
 - Arduino IDE 1.0.1
