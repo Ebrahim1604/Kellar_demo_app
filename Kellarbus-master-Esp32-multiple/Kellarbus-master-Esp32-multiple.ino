@@ -95,12 +95,12 @@ void loop()
     Serial.print("P1 : ");
     pressure = kbus.getP1(P_BAR);
     Serial.println(pressure);
-    sensor_values[i][0] = pressure;
+    sensor_values[i-1][0] = pressure;
     
     Serial.print("TOB1 : ");
     temp = kbus.getTOB1(T_DEGC);
     Serial.println(temp);
-    sensor_values[i][1] = temp;
+    sensor_values[i-1][1] = temp;
     
     mySerial.flush();
     mySerial.end();
