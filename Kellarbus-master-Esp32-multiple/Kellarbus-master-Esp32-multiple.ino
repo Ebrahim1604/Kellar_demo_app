@@ -13,6 +13,7 @@
 
 #define NOD 8 //number of devices connected to the kellerbus
 
+double sensor_values[NOD][2];
 /*
   RX Pin: 12
   TX Pin: 13
@@ -32,7 +33,9 @@ uint8_t mclass, group, myear, week, cfg_p, cfg_t, cnt_t, buffer, state;
 int serial;
 double temp, pressure;
     
-  unsigned long time1,time2;
+unsigned long time1,time2;
+
+double get_sensor_values(int Device_no,int param);
 
 void setup()
 {
@@ -41,6 +44,14 @@ void setup()
   pinMode(txPin, OUTPUT);
 
   Serial.begin(115200);
+
+  for (int i=0; i<NOD; i++)
+  {
+     for(int j=0; j<2; j++)
+     {
+        sensor_values[i][j] = 0.0;
+      }
+    }
 
   //mySerial.begin(9600, SWSERIAL_8N1, rxPin, txPin, false);
   /*
@@ -84,9 +95,13 @@ void loop()
     Serial.print("P1 : ");
     pressure = kbus.getP1(P_BAR);
     Serial.println(pressure);
+    sensor_values[i][0] = pressure;
+    
     Serial.print("TOB1 : ");
     temp = kbus.getTOB1(T_DEGC);
     Serial.println(temp);
+    sensor_values[i][1] = temp;
+    
     mySerial.flush();
     mySerial.end();
 
@@ -102,3 +117,14 @@ void loop()
   Serial.print(total_time);
   Serial.println(" secs");
 }
+
+double get_sensor_values(int Device_no,int param)// param : 1---> Pressure, 2--->Temp
+{
+   if (Device_no > NOD)
+   {
+    Serial.printf("Error: Device no %d not connected, total devices connected = %d ",Device_no,NOD);
+    return 0.0;
+    }
+
+    return sensor_values[Device_no - 1][param - 1];
+  }
