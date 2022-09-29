@@ -42,7 +42,8 @@ void setup()
 
   Serial.begin(115200);
 
-  mySerial.begin(9600, SWSERIAL_8N1, rxPin, txPin, false);
+  //mySerial.begin(9600, SWSERIAL_8N1, rxPin, txPin, false);
+  /*
   if (!mySerial)
   {
     Serial.println("SoftSerial configuration not done correctly");
@@ -51,6 +52,7 @@ void setup()
       delay(1000);
     }
   }
+  */
 }
 
 void loop()
@@ -66,7 +68,8 @@ void loop()
     pressure = 0;
     
     Serial.println("\n-----------------");
-    
+
+    mySerial.begin(9600, SWSERIAL_8N1, rxPin, txPin, false);
     kbus.initDevice(i, &mclass, &group, &myear, &week, &buffer, &state);
    
     Serial.print("DEVICE ADDRESS : ");
@@ -84,13 +87,18 @@ void loop()
     Serial.print("TOB1 : ");
     temp = kbus.getTOB1(T_DEGC);
     Serial.println(temp);
+    mySerial.flush();
+    mySerial.end();
+
+    delay(10);
   }
   
   time2 = millis();
 
   Serial.println("\n-------------------------------------------------------");
-  
+
+  double total_time = (((time2-time1)-(NOD*10))/1000.0); 
   Serial.printf("Time taken for reading %d sensors = ",NOD);
-  Serial.print((time2-time1)/1000.0);
+  Serial.print(total_time);
   Serial.println(" secs");
 }
