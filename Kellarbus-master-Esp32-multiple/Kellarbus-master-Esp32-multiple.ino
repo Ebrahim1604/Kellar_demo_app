@@ -11,7 +11,7 @@
 #include "time/TimeLib.h"
 #include "SoftwareSerial.h"
 
-#define NOD 8 //number of devices connected to the kellerbus
+#define NOD 4 //number of devices connected to the kellerbus
 
 double sensor_values[NOD][2];
 /*
@@ -70,6 +70,8 @@ void loop()
 {
   time1 = 0;
   time2 = 0;
+
+  Serial.println("Chkpt1");
   
   time1 = millis();
   
@@ -79,6 +81,8 @@ void loop()
     pressure = 0;
     
     Serial.println("\n-----------------");
+
+    Serial.println("Chkpt2");
 
     mySerial.begin(9600, SWSERIAL_8N1, rxPin, txPin, false);
     kbus.initDevice(i, &mclass, &group, &myear, &week, &buffer, &state);
@@ -105,10 +109,14 @@ void loop()
     mySerial.flush();
     mySerial.end();
 
+    Serial.println("Chkpt9");
+
     delay(10);
   }
   
   time2 = millis();
+
+  Serial.println("Chkpt10");
 
   Serial.println("\n-------------------------------------------------------");
 
@@ -116,6 +124,8 @@ void loop()
   Serial.printf("Time taken for reading %d sensors = ",NOD);
   Serial.print(total_time);
   Serial.println(" secs");
+
+  Serial.println("Chkpt11");
 }
 
 double get_sensor_values(int Device_no,int param)// param : 1---> Pressure, 2--->Temp
