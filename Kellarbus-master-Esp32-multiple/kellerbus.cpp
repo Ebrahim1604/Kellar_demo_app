@@ -44,7 +44,6 @@ CKellerBus::CKellerBus(Stream *serialPort, uint16_t baudrate, uint8_t rts, uint1
   
   pinMode(_rts,OUTPUT);
   digitalWrite(_rts,LOW);
-  Serial.println("Chkpt3");
 }//*/
 
 /**
