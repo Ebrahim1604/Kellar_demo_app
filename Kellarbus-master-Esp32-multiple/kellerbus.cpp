@@ -44,6 +44,7 @@ CKellerBus::CKellerBus(Stream *serialPort, uint16_t baudrate, uint8_t rts, uint1
   
   pinMode(_rts,OUTPUT);
   digitalWrite(_rts,LOW);
+  Serial.println("Chkpt3");
 }//*/
 
 /**
@@ -100,7 +101,9 @@ void CKellerBus::initDevice(uint8_t device, uint8_t* deviceClass, uint8_t* group
     if (*week != 0) {*week = RxBuffer[5];}
     if (*buffer != 0) {*buffer = RxBuffer[6];}
     if (*state != 0) {*state = RxBuffer[7];}
-  } 
+  }
+
+  Serial.println("Chkpt4");
 }
 
 /**
@@ -121,6 +124,8 @@ uint32_t CKellerBus::getSerialnumber(void)
   } else {
     return -1;
   }
+
+  Serial.println("Chkpt5");
 }
 
 /**
@@ -826,6 +831,7 @@ void CKellerBus::TransferData(byte nTX, byte nRX)
 
 float CKellerBus::getCH0(void) 
 {
+  Serial.println("Chkpt6");
   return readChannel(CH_0);
 }
 
@@ -838,6 +844,7 @@ float CKellerBus::getCH0(void)
 
 float CKellerBus::getP1(uint8_t unit) 
 { 
+  Serial.println("Chkpt7");
   return pressureConversion(readChannel(CH_P1),unit);
 }
 
@@ -864,6 +871,7 @@ float CKellerBus::getP2(uint8_t unit)
 
 float CKellerBus::getTOB1(uint8_t unit) 
 {
+  Serial.println("Chkpt8");
   return temperatureConversion(readChannel(CH_TOB1),unit);
 }
 
