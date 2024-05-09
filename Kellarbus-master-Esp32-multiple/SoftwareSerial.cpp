@@ -136,7 +136,11 @@ void SoftwareSerial::setRxGPIOPullUp() {
 
 void SoftwareSerial::begin(uint32_t baud, SoftwareSerialConfig config,
     int8_t rxPin, int8_t txPin,
-    bool invert, int bufCapacity, int isrBufCapacity) {
+    bool invert, int bufCapacity, int isrBufCapacity) 
+    
+    {
+
+    Serial.println("Chkpt3.1");
     if (-1 != rxPin) m_rxPin = rxPin;
     if (-1 != txPin) m_txPin = txPin;
     m_oneWire = (m_rxPin == m_txPin);
@@ -145,9 +149,12 @@ void SoftwareSerial::begin(uint32_t baud, SoftwareSerialConfig config,
     m_parityMode = static_cast<SoftwareSerialParity>(config & 070);
     m_stopBits = 1 + ((config & 0300) ? 1 : 0);
     m_pduBits = m_dataBits + static_cast<bool>(m_parityMode) + m_stopBits;
+    Serial.println("Chkpt3.2");
     m_bitCycles = (ESP.getCpuFreqMHz() * 1000000UL + baud / 2) / baud;
     m_intTxEnabled = true;
-    if (isValidRxGPIOpin(m_rxPin)) {
+    if (isValidRxGPIOpin(m_rxPin)) 
+    {
+        Serial.println("Chkpt3.3");
         m_rxReg = portInputRegister(digitalPinToPort(m_rxPin));
         m_rxBitMask = digitalPinToBitMask(m_rxPin);
         m_buffer.reset(new circular_queue<uint8_t>((bufCapacity > 0) ? bufCapacity : 64));
@@ -158,12 +165,14 @@ void SoftwareSerial::begin(uint32_t baud, SoftwareSerialConfig config,
         }
         m_isrBuffer.reset(new circular_queue<uint32_t, SoftwareSerial*>((isrBufCapacity > 0) ?
             isrBufCapacity : m_buffer->capacity() * (2 + m_dataBits + static_cast<bool>(m_parityMode))));
-        if (m_buffer && (!m_parityMode || m_parityBuffer) && m_isrBuffer) {
+        if (m_buffer && (!m_parityMode || m_parityBuffer) && m_isrBuffer) 
+        {
             m_rxValid = true;
             setRxGPIOPullUp();
         }
     }
     if (isValidTxGPIOpin(m_txPin)) {
+      Serial.println("Chkpt3.4");
 #if !defined(ESP8266)
         m_txReg = portOutputRegister(digitalPinToPort(m_txPin));
 #endif
